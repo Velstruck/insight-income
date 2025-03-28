@@ -45,7 +45,46 @@ exports.registerUser = async (req, res) => {
 }
 
 // login kro user ko
-exports.loginUser = async (req, res) => {}
+exports.loginUser = async (req, res) => {
+    const {email, password} = req.body;
+
+    //validation krenge ab
+    if(!email || !password) {
+        return res.status(400).json({message: 'Please enter all fields'});
+    }
+
+    try {
+        const user = await User.findOne({email});
+
+        if(!user || !(await user.comparePasswords(password))) {
+            return res.status(400).json({message: 'Invalid credentials!'});
+        }
+        
+        res.status(200).json({
+            id: user._id,
+            user,
+            token: generateToken(user._id)
+        });
+
+    } catch (err) {
+        res.
+        status(500)
+        .json({message: 'Server Error!', error: err.message});
+    }
+}
 
 // get kro user ko
-exports.getUserInfo = async (req, res) => {}
+exports.getUserInfo = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+        if(!user){
+            return res.status(404).json({message: 'User not found!'});
+        }
+
+        res.status(200).json(user);
+    } catch (err) {
+        res.
+        status(500)
+        .json({message: 'Server Error!', error: err.message});
+    }
+}
