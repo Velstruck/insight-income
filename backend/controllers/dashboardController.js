@@ -2,8 +2,7 @@ const Income = require('../models/Income');
 const Expense = require('../models/Expense');
 const { isValidObjectId, Types} = require('mongoose');
 
-//Dashboard dataa
-
+//Dashboard dataa bolte
 exports.getDashboardData = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -15,25 +14,22 @@ exports.getDashboardData = async (req, res) => {
             { $group: { _id: null, total: { $sum: '$amount' } } }
         ]);
 
-        console.log("totalIncome", {totalIncome, userId: isValidObjectId(userId)}); 
-
         const totalExpense = await Expense.aggregate([
             { $match: {userId: userObjectId} },
             { $group: { _id: null, total: { $sum: '$amount' } } }
         ]);
-
+        
         //fetching last 60 days income transactions
         const last60DaysIncomeTransactions = await Income.find({
             userId,
             date: { $gte: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000) }
         }).sort({ date: -1 });
-
-
+    
         //fetching last 60 days total income
         const incomeLast60Days = last60DaysIncomeTransactions.reduce(
             (sum, transaction) => sum + transaction.amount,
             0
-        );
+        ); 
 
         // get expense of last 30 days transactions
         const last30DaysExpenseTransactions = await Expense.find({
@@ -46,6 +42,7 @@ exports.getDashboardData = async (req, res) => {
             (sum, transaction) => sum + transaction.amount,
             0
         );
+                
 
         // get last 5 transactions both income+expenses
         const lastTransactions = [
@@ -62,7 +59,6 @@ exports.getDashboardData = async (req, res) => {
                 })
             ),
         ].sort((a, b) => b.date - a.date); // sorting for latest first
-
 
         //Final response.. 
         res.json({
