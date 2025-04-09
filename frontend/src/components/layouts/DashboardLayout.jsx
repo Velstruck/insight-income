@@ -18,10 +18,7 @@ const DashboardLayout = ({children, activeMenu}) => {
             <div className='grow mx-5'>{children}</div>
         </div>
        )
-       } 
-
-
-       
+       }       
     </div>
   )
 }

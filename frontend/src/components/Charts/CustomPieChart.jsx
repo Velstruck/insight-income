@@ -17,8 +17,7 @@ const CustomPieChart = ({
     colors,
     showTextAnchor,
 }) => {
-    console.log(label, totalAmount, showTextAnchor);
-    
+     
        
   return <div style={{ position: 'relative', width: '100%', height: 300 }}>
   <ResponsiveContainer>
