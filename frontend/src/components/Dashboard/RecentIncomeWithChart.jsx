@@ -9,8 +9,7 @@ const RecentIncomeWithChart = ({data, totalIncome}) => {
     const [chartData, setChartData] = useState([]);
 
     const prepareChartData = () => {
-        console.log("data", data);
-        
+               
         const dataArr = data.map((item) => ({
             name: item?.source,
             amount: item?.amount,
