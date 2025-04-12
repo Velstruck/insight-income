@@ -9,6 +9,7 @@ import AddExpenseForm from '../../components/Expense/AddExpenseForm';
 import Modal from '../../components/Modal';
 import ExpenseList from '../../components/Expense/ExpenseList';
 import DeleteAlert from '../../components/DeleteAlert';
+import { BarChartSkeleton, RecentTransactionsSkeleton } from '../../components/Dashboard/DashboardSkeletons';
 
 const Expense = () => {
   useUserAuth();
@@ -25,6 +26,9 @@ const Expense = () => {
     if (loading) return;
 
     setLoading(true);
+
+    // Temporary 1 second delay for testing skeleton loading
+    //await new Promise(resolve => setTimeout(resolve, 1000));
 
     try {
       const response = await axiosInstance.get(
@@ -124,19 +128,27 @@ const Expense = () => {
       <div className='mx-auto my-5'>
         <div className='grid grid-cols-1 gap-6'>
           <div className=''>
-            <ExpenseOverview
-              transactions={expenseData}
-              onAddExpense={() => setOpenAddExpenseModal(true)}
-            />
+            {loading ? (
+              <BarChartSkeleton />
+            ) : (
+              <ExpenseOverview
+                transactions={expenseData}
+                onAddExpense={() => setOpenAddExpenseModal(true)}
+              />
+            )}
           </div>
 
-          <ExpenseList
-            transactions={expenseData}
-            onDelete={(id) => {
-              setOpenDeleteAlert({ show: true, data: id })
-            }}
-            onDownload={handleDownloadExpenseDetails}
-          />
+          {loading ? (
+            <RecentTransactionsSkeleton />
+          ) : (
+            <ExpenseList
+              transactions={expenseData}
+              onDelete={(id) => {
+                setOpenDeleteAlert({ show: true, data: id })
+              }}
+              onDownload={handleDownloadExpenseDetails}
+            />
+          )}
         </div>
 
         <Modal

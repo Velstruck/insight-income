@@ -9,6 +9,7 @@ import AddIncomeForm from '../../components/Income/AddIncomeForm';
 import toast from 'react-hot-toast';
 import IncomeList from '../../components/Income/IncomeList';
 import DeleteAlert from '../../components/DeleteAlert';
+import { BarChartSkeleton, RecentTransactionsSkeleton } from '../../components/Dashboard/DashboardSkeletons';
 
 
 const Income = () => {
@@ -26,6 +27,9 @@ const Income = () => {
     if(loading) return;
 
     setLoading(true);
+
+    // Temporary 1 second delay for testing skeleton loading
+    //await new Promise(resolve => setTimeout(resolve, 1000));
 
     try {
       const response = await axiosInstance.get(
@@ -62,6 +66,9 @@ const Income = () => {
       return;
     }
 
+    // Temporary 1 second delay for testing skeleton loading
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
     try {
       await axiosInstance.post(API_PATHS.INCOME.ADD_INCOME, {
         source,
@@ -79,6 +86,9 @@ const Income = () => {
 
   // handling delete income
   const handleDeleteIncome = async (id) => {
+    // Temporary 1 second delay for testing skeleton loading
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
     try {
       await axiosInstance.delete(API_PATHS.INCOME.DELETE_INCOME(id));
       setOpenDeleteAlert({ show: false, data: null});
@@ -91,6 +101,9 @@ const Income = () => {
 
   // handling download income details
   const handleDownloadIncomeDetails = async () => {
+    // Temporary 1 second delay for testing skeleton loading
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
     try {
       const response = await axiosInstance.get(
         API_PATHS.INCOME.DOWNLOAD_INCOME,
@@ -126,19 +139,27 @@ const Income = () => {
       <div className='mx-auto my-5'>
         <div className='grid grid-cols-1 gap-6'>
           <div className=''>
-            <IncomeOverview
-              transactions={incomeData}
-              onAddIncome={() => setOpenAddIncomeModal(true)}
-            />
+            {loading ? (
+              <BarChartSkeleton />
+            ) : (
+              <IncomeOverview
+                transactions={incomeData}
+                onAddIncome={() => setOpenAddIncomeModal(true)}
+              />
+            )}
           </div>
 
-          <IncomeList
-            transactions={incomeData}
-            onDelete={(id)=>{
-              setOpenDeleteAlert({ show: true, data: id})
-            }}
-            onDownload={handleDownloadIncomeDetails}
-          />
+          {loading ? (
+            <RecentTransactionsSkeleton />
+          ) : (
+            <IncomeList
+              transactions={incomeData}
+              onDelete={(id)=>{
+                setOpenDeleteAlert({ show: true, data: id})
+              }}
+              onDownload={handleDownloadIncomeDetails}
+            />
+          )}
         </div>
 
 
