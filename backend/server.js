@@ -14,10 +14,12 @@ const app = express();
 
 app.use(
     cors({
-        origin: process.env.CLIENT_URL,
-        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Ensure OPTIONS is included
+        origin: ['https://insight-income.vercel.app', 'http://localhost:5173', process.env.CLIENT_URL].filter(Boolean),
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         allowedHeaders: ["Content-Type", "Authorization"],
         credentials: true,
+        preflightContinue: false,
+        optionsSuccessStatus: 204
     })
 )
 
