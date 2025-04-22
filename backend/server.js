@@ -1,4 +1,3 @@
-require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
@@ -8,6 +7,9 @@ const incomeRoutes = require("./routes/incomeRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 
+const dotenv = require("dotenv");
+dotenv.config();
+
 const app = express();
 
 //CORS ke liye middlewares
@@ -15,8 +17,6 @@ const app = express();
 app.use(
     cors({
         origin: process.env.CLIENT_URL,
-        methods: ["GET", "POST", "PUT", "DELETE"],
-        allowedHeaders: ["Content-Type", "Authorization"],
         credentials: true,
     })
 )
