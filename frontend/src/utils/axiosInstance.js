@@ -6,8 +6,9 @@ const axiosInstance = axios.create({
     timeout: 10000,
     withCredentials: true,
     headers:{
-        "Content-Type":"application/json",
-        Accept:"application/json",
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`,
+        Accept: "application/json",
     },
 });
 
